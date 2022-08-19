@@ -305,7 +305,7 @@ jobs:
       with:
         fetch-depth: 1
         path: conformance-tests
-        ref: test
+        ref: test2
         repository: sadlerap/conformance.git
 
     - name: Conformance tests
