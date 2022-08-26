@@ -400,12 +400,45 @@ jobs:
       run: kind delete cluster
       if: always()
 
+  security:
+    name: Security checks
+    env:
+      BUNDLE: registry.local/bundle
+    needs: stage
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download staged bundle
+      uses: actions/download-artifact@v3
+      with:
+        name: servicebinding-runtime-bundle.tar
+    - name: Relocate bundle
+      run: |
+        set -o errexit
+        set -o nounset
+        set -o pipefail
+
+        docker import servicebinding-runtime-bundle.tar $BUNDLE
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        format: sarif
+        ignore-unfixed: true
+        output: trivy-results.sarif
+        image-ref: ${{ env.BUNDLE }}
+        severity: 'CRITICAL,HIGH,MEDIUM,LOW'
+        vuln-type: 'os,library'
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+
   # aggregate the unit and acceptance results into a single job
   test:
     name: Test
     needs:
     - unit
     - acceptance
+    - security
     runs-on: ubuntu-latest
     steps:
     - run: echo "it passed"
