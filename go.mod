@@ -8,8 +8,8 @@ require (
 	github.com/google/go-cmp v0.5.8
 	github.com/vmware-labs/reconciler-runtime v0.8.0
 	gomodules.xyz/jsonpatch/v2 v2.2.0
-	k8s.io/api v0.25.0
-	k8s.io/apimachinery v0.25.0
+	k8s.io/api v0.25.2
+	k8s.io/apimachinery v0.25.2
 	k8s.io/client-go v0.25.0
 	k8s.io/utils v0.0.0-20220728103510-ee6ede2d64ed
 	sigs.k8s.io/controller-runtime v0.12.3
